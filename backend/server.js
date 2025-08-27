@@ -18,7 +18,7 @@ const app = express();
 // ----------------------
 // Middleware
 // ----------------------
-app.use(
+/* app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:3000", // frontend URL
     credentials: true,
@@ -27,6 +27,27 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+*/
+
+const allowedOrigins = [
+  process.env.CLIENT_URL || "http://localhost:3000", // Local dev
+  "https://mytradelink-frontend.onrender.com",      // Render frontend
+  //"https://mytradelink.vercel.app"                  // Vercel frontend (if you deploy there)
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 
 // ----------------------
 // Serve static uploads folder
@@ -75,3 +96,4 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, () =>
   console.log(`🚀 Server running at http://localhost:${PORT}`)
 );
+
