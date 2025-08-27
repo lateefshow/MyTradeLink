@@ -18,36 +18,28 @@ const app = express();
 // ----------------------
 // Middleware
 // ----------------------
-/* app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000", // frontend URL
-    credentials: true,
-  })
-);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-*/
-
 const allowedOrigins = [
   process.env.CLIENT_URL || "http://localhost:3000", // Local dev
   "https://mytradelink-frontend.onrender.com",      // Render frontend
-  //"https://mytradelink.vercel.app"                  // Vercel frontend (if you deploy there)
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
+      // allow requests with no origin (like Postman, curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ----------------------
 // Serve static uploads folder
@@ -56,9 +48,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-// Example: http://localhost:8000/uploads/filename.png
+// Example: https://mytradelink.onrender.com/uploads/filename.png
 
-// (Optional: buyers-specific uploads folder if needed)
 app.use(
   "/uploads/buyers",
   express.static(path.join(__dirname, "uploads/buyers"))
@@ -92,8 +83,7 @@ app.use((err, req, res, next) => {
 // ----------------------
 // Server
 // ----------------------
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running at http://localhost:${PORT}`)
+const PORT = process.env.PORT || 8000; // Render will set PORT automatically
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`🚀 Server running on port ${PORT}`)
 );
-
