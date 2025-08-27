@@ -33,6 +33,8 @@ const initialState: ProductState = {
   success: false,
 };
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 // ✅ Thunk: Upload new product/service (auth required)
 export const uploadProduct = createAsyncThunk<
   Product,
@@ -50,7 +52,7 @@ export const uploadProduct = createAsyncThunk<
     }
 
     const { data } = await axios.post(
-      "http://localhost:8000/api/products/upload",
+      `${API_BASE}/api/products/upload`,
       formData,
       {
         headers: {
@@ -76,7 +78,7 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >("products/fetchProducts", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get("http://localhost:8000/api/products", {
+    const { data } = await axios.get(`${API_BASE}/api/products`, {
       withCredentials: true,
     });
 
