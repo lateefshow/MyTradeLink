@@ -9,9 +9,11 @@ import {
 } from "../slices/authSlice";
 import axios from "axios";
 
-// Define API bases
-const API_AUTH_URL = "http://localhost:8000/api/auth";
-const API_SELLER_URL = "http://localhost:8000/api/sellers";
+// ✅ Use environment variable instead of hardcoding
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
+const API_AUTH_URL = `${API_BASE}/api/auth`;
+const API_SELLER_URL = `${API_BASE}/api/sellers`;
 
 // -----------------------------
 // Login User
