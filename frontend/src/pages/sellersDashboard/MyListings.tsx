@@ -24,18 +24,17 @@ const MyListings = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
   // Fetch products and services
   const fetchListings = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:8000/api/products/my-products",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        }
-      );
+      const { data } = await axios.get(`${API_BASE}/api/products/my-products`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
 
       setProducts(
         data.products.filter((p: Product) => p.categoryType === "product")
@@ -71,7 +70,7 @@ const MyListings = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8000/api/products/${item._id}`, {
+      await axios.delete(`${API_BASE}/api/products/${item._id}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -89,7 +88,7 @@ const MyListings = () => {
       {items.map((item) => (
         <div key={item._id} className="bg-white p-4 shadow rounded">
           <img
-            src={`http://localhost:8000/uploads/${item.image}`}
+            src={`${API_BASE}/uploads/${item.image}`}
             alt={item.name}
             className="w-full h-60 object-cover rounded"
           />
