@@ -23,6 +23,8 @@ const SellWithUs = () => {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
 
+  const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
   const handleChange = (e: any) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -62,7 +64,7 @@ const SellWithUs = () => {
         if (value !== null) data.append(key, value as any);
       });
 
-      await axios.post("http://localhost:8000/api/sellers/register", data, {
+      await axios.post(`${API_BASE}/api/sellers/register`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
