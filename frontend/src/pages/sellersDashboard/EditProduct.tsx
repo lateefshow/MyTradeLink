@@ -17,6 +17,8 @@ interface ProductFormData {
   currentImage?: string;
 }
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const EditProduct: React.FC = () => {
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
@@ -46,7 +48,7 @@ const EditProduct: React.FC = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
         const { data } = await axios.get(
-          `http://localhost:8000/api/products/${productId}`,
+          `${BACKEND_URL}/api/products/${productId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
@@ -67,9 +69,7 @@ const EditProduct: React.FC = () => {
         });
 
         setPreviewImage(
-          product.image
-            ? `http://localhost:8000/uploads/${product.image}`
-            : null
+          product.image ? `${BACKEND_URL}/uploads/${product.image}` : null
         );
       } catch (err: any) {
         console.error("Fetch product error:", err);
@@ -132,7 +132,7 @@ const EditProduct: React.FC = () => {
       data.append("description", formData.description);
       if (formData.image) data.append("image", formData.image); // optional replacement
 
-      await axios.put(`http://localhost:8000/api/products/${productId}`, data, {
+      await axios.put(`${BACKEND_URL}/api/products/${productId}`, data, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
