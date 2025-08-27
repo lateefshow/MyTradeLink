@@ -5,6 +5,8 @@ import type { RootState, AppDispatch } from "../../redux/store";
 import { updateSellerProfile } from "../../redux/actions/authAction";
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 const Settings = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, token } = useSelector((state: RootState) => state.auth);
@@ -32,10 +34,9 @@ const Settings = () => {
     const fetchSellerProfile = async () => {
       try {
         if (!token) return;
-        const { data } = await axios.get(
-          "http://localhost:8000/api/sellers/me",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const { data } = await axios.get(`${API_BASE}/api/sellers/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         setFormData((prev) => ({
           ...prev,
@@ -47,7 +48,7 @@ const Settings = () => {
           description: data.description || "",
           category: data.category || "",
           currentImage: data.sellerImage
-            ? `http://localhost:8000/uploads/sellers/${data.sellerImage}`
+            ? `${API_BASE}/uploads/sellers/${data.sellerImage}`
             : "",
         }));
       } catch (err) {
@@ -99,7 +100,7 @@ const Settings = () => {
     try {
       if (!token) return;
       await axios.patch(
-        "http://localhost:8000/api/sellers/deactivate",
+        `${API_BASE}/api/sellers/deactivate`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -115,7 +116,7 @@ const Settings = () => {
     if (!window.confirm("This action is permanent. Delete account?")) return;
     try {
       if (!token) return;
-      await axios.delete("http://localhost:8000/api/sellers/delete", {
+      await axios.delete(`${API_BASE}/api/sellers/delete`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Account deleted permanently ❌");
